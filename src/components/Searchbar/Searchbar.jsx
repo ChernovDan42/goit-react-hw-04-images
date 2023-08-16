@@ -4,17 +4,18 @@ import { AiOutlineSearch } from 'react-icons/ai';
 import { IconContext } from 'react-icons';
 import PropTypes from 'prop-types';
 
-export class Searchbar extends Component {
-  onSubmitForm = e => {
+export function Searchbar({ onSubmit }) {
+  
+ const onSubmitForm = e => {
     e.preventDefault();
     const value = e.target.elements.searchQuery.value;
-    this.props.onSubmit(value);
+    onSubmit(value);
   };
 
-  render() {
+
     return (
       <header className={css.Searchbar}>
-        <form className={css.SearchForm} onSubmit={this.onSubmitForm}>
+        <form className={css.SearchForm} onSubmit={onSubmitForm}>
           <button className={css.SearchFormButton} type="submit">
             <IconContext.Provider value={{ size: '2em' }}>
               <div>
@@ -34,7 +35,7 @@ export class Searchbar extends Component {
       </header>
     );
   }
-}
+
 
 Searchbar.propTypes = {
     onSubmit: PropTypes.func.isRequired

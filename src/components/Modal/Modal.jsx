@@ -17,14 +17,6 @@ export function Modal ({onClose,children}) {
   })
   
 
-  // componentDidMount() {
-  //   window.addEventListener('keydown',handleKeydown)
-  // }
-
-  // componentWillUnmount() {
-  //    window.removeEventListener('keydown',handleKeydown)
-  // }
-
 
  const handleKeydown = (e) => {
     if (e.code === 'Escape') {

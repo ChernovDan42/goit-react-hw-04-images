@@ -4,7 +4,6 @@ import fetchImages from './servises/pixabayAPI';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { Button } from './Button/Button';
 import { Loader } from './Loader/Loader';
-import { Modal } from './Modal/Modal';
 import Notiflix from 'notiflix';
 import { useState, useEffect } from 'react';
 
@@ -13,8 +12,6 @@ export function App() {
   const [page, setPage] = useState(1);
   const [images, setImages] = useState([]);
   const [loader, setLoader] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [showBtn, setShowBtn] = useState(false);
 
   useEffect(() => {
@@ -84,14 +81,6 @@ export function App() {
     setPage(prevState => prevState + 1);
   };
 
-  const toggleModal = () => {
-    setShowModal(state => !state);
-  };
-
-  const onPhotoClick = url => {
-    setSelectedPhoto(url);
-    setShowModal(true);
-  };
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -103,12 +92,7 @@ export function App() {
   return (
     <div className={css.App}>
       <Searchbar onSubmit={onFormSubmit} />
-      <ImageGallery images={images} onPhotoClick={onPhotoClick} />
-      {showModal && (
-        <Modal onClose={toggleModal}>
-          <img src={selectedPhoto} alt="" />
-        </Modal>
-      )}
+      <ImageGallery images={images}  />
       {loader && <Loader />}
       {showBtn && <Button loadMore={onLoadMore} />}
     </div>

@@ -12,28 +12,21 @@ export function App() {
   const [page, setPage] = useState(1);
   const [images, setImages] = useState([]);
   const [loader, setLoader] = useState(false);
-  const [showBtn, setShowBtn] = useState(false);
+  const [totalImages, setTotalImages] = useState(0);
 
   useEffect(() => {
     const onFirstQuery = () => {
       scrollToTop();
       setLoader(true);
 
-      fetchImages(searchQuery.trim(), page)
+      fetchImages(searchQuery, page)
         .then(({ data: { totalHits, hits } }) => {
-          const maxPage = Math.ceil(totalHits / hits.length);
-
+          setTotalImages(totalHits);
           if (totalHits === 0) {
             return Notiflix.Notify.warning('We have no match');
           }
 
-          if (maxPage === page) {
-            setShowBtn(false);
-          } else {
-            setShowBtn(true);
-          }
-
-          setImages(prevState => [...prevState, ...hits]);
+          setImages(hits);
         })
         .catch(error => console.log(error))
         .finally(() => {
@@ -44,11 +37,7 @@ export function App() {
     const onNextPage = () => {
       setLoader(true);
       fetchImages(searchQuery, page)
-        .then(({ data: { hits, totalHits } }) => {
-          if (hits.length < 12) {
-            setShowBtn(false);
-          }
-
+        .then(({ data: { hits } }) => {
           setImages(prevState => [...prevState, ...hits]);
         })
         .catch(error => {
@@ -68,19 +57,22 @@ export function App() {
     }
   }, [searchQuery, page]);
 
-
   const onFormSubmit = value => {
+    const query = value.toLowerCase().trim();
+    if (searchQuery === query) {
+      // захотів щоб при однаковому query оновлювався запит.
+      // інколи роблю так в житті на сайтах.Не знаю чому,але для мене так зручніше аніж оновлювати сторінку всю.
+      setPage(1);
+      return;
+    }
     setImages([]);
-
-    setSearchQuery(value);
+    setSearchQuery(query);
     setPage(1);
-    setShowBtn(false);
   };
 
   const onLoadMore = () => {
     setPage(prevState => prevState + 1);
   };
-
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -92,9 +84,11 @@ export function App() {
   return (
     <div className={css.App}>
       <Searchbar onSubmit={onFormSubmit} />
-      <ImageGallery images={images}  />
+      <ImageGallery images={images} />
       {loader && <Loader />}
-      {showBtn && <Button loadMore={onLoadMore} />}
+      {totalImages !== images.length && !loader && (
+        <Button loadMore={onLoadMore} />
+      )}
     </div>
   );
 }

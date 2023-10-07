@@ -8,7 +8,7 @@ export function ImageGalleryItem({ src, tags, largeImg}) {
     const [showModal, setShowModal] = useState(false)
     
      const toggleModal = () => setShowModal(state => !state);
-     ;
+     
     
 
 

@@ -60,9 +60,6 @@ export function App() {
   const onFormSubmit = value => {
     const query = value.toLowerCase().trim();
     if (searchQuery === query) {
-      // захотів щоб при однаковому query оновлювався запит.
-      // інколи роблю так в житті на сайтах.Не знаю чому,але для мене так зручніше аніж оновлювати сторінку всю.
-      setPage(1);
       return;
     }
     setImages([]);

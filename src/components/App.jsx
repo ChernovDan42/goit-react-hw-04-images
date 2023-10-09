@@ -15,6 +15,9 @@ export function App() {
   const [totalImages, setTotalImages] = useState(0);
 
   useEffect(() => {
+    if (!searchQuery) return;
+    if (page === 1) scrollToTop();
+
     const onFirstQuery = () => {
       scrollToTop();
       setLoader(true);
@@ -25,7 +28,6 @@ export function App() {
           if (totalHits === 0) {
             return Notiflix.Notify.warning('We have no match');
           }
-
           setImages(hits);
         })
         .catch(error => console.log(error))

@@ -17,46 +17,20 @@ export function App() {
   useEffect(() => {
     if (!searchQuery) return;
     if (page === 1) scrollToTop();
+    setLoader(true);
 
-    const onFirstQuery = () => {
-      scrollToTop();
-      setLoader(true);
-
-      fetchImages(searchQuery, page)
-        .then(({ data: { totalHits, hits } }) => {
-          setTotalImages(totalHits);
-          if (totalHits === 0) {
-            return Notiflix.Notify.warning('We have no match');
-          }
-          setImages(hits);
-        })
-        .catch(error => console.log(error))
-        .finally(() => {
-          setLoader(false);
-        });
-    };
-
-    const onNextPage = () => {
-      setLoader(true);
-      fetchImages(searchQuery, page)
-        .then(({ data: { hits } }) => {
-          setImages(prevState => [...prevState, ...hits]);
-        })
-        .catch(error => {
-          console.log(error.message);
-        })
-        .finally(() => setLoader(false));
-    };
-
-    if (searchQuery === '') {
-      return;
-    }
-
-    if (page === 1) {
-      onFirstQuery();
-    } else {
-      onNextPage();
-    }
+    fetchImages(searchQuery, page)
+      .then(({ data: { totalHits, hits } }) => {
+        setTotalImages(totalHits);
+        if (totalHits === 0) {
+          return Notiflix.Notify.warning('We have no match');
+        }
+        setImages(prev => (page === 1 ? hits : [...prev, ...hits]));
+      })
+      .catch(error => console.log(error))
+      .finally(() => {
+        setLoader(false);
+      });
   }, [searchQuery, page]);
 
   const onFormSubmit = value => {
